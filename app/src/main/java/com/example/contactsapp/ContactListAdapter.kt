@@ -30,7 +30,7 @@ class ContactListAdapter(
     override fun onBindViewHolder(holder: ContactListViewHolder, position: Int) {
         holder.name.text = listOfContact[position].name
         holder.phoneNumber.text = listOfContact[position].phoneNumber
-        holder.imageRes.setImageResource(listOfContact[position].imageRes)
+        holder.imageRes.setImageURI(listOfContact[position].imageRes)
     }
 
 }
