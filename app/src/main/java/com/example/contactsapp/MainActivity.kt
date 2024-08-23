@@ -19,11 +19,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var dialog: Dialog
+    private lateinit var listOfContact: MutableList<ContactItem>
     private lateinit var dialogName: EditText
     private lateinit var dialogPh: EditText
     private lateinit var dialogImage: ImageView
     private lateinit var btn1: Button
     private lateinit var btn2: Button
+    private lateinit var adapter: ContactListAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -33,48 +36,19 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-        val listOfContact = mutableListOf<ContactItem>()
+
+        listOfContact = mutableListOf()
         val rv = findViewById<RecyclerView>(R.id.rv)
         val fab = findViewById<FloatingActionButton>(R.id.fab)
         fab.setOnClickListener {
             showDialog()
         }
-        listOfContact.add(ContactItem(
-            name = "Soumya",
-            phoneNumber = "1234567890",
-            imageRes = R.drawable.user
-        ))
-        listOfContact.add(ContactItem(
-            name = "Soumya",
-            phoneNumber = "1234567890",
-            imageRes = R.drawable.man
-        ))
-        listOfContact.add(ContactItem(
-            name = "Soumya",
-            phoneNumber = "1234567890",
-            imageRes = R.drawable.woman
-        ))
-        listOfContact.add(ContactItem(
-            name = "Soumya",
-            phoneNumber = "1234567890",
-            imageRes = R.drawable.student
-        ))
-        listOfContact.add(ContactItem(
-            name = "Soumya",
-            phoneNumber = "1234567890",
-            imageRes = R.drawable.teacher
-        ))
-        listOfContact.add(ContactItem(
-            name = "Soumya",
-            phoneNumber = "1234567890",
-            imageRes = R.drawable.doctor
-        ))
-        val adapter = ContactListAdapter(listOfContact)
+        adapter = ContactListAdapter(listOfContact)
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = adapter
     }
     private fun showDialog(){
-        val dialog = Dialog(this)
+        dialog = Dialog(this)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(false)
         dialog.setContentView(R.layout.layout_fab_dialog)
@@ -96,15 +70,18 @@ class MainActivity : AppCompatActivity() {
             dialogImage.visibility = View.VISIBLE
             dialogImage.setImageURI(data?.data)
             btn2.setOnClickListener {
-                val nameedt = dialogName.text.toString()
+                val nameEdt = dialogName.text.toString()
                 val ph = dialogPh.text.toString()
-                val imagepreview = data?.data
+                val imagePreview = data?.data
 
                 val contact = ContactItem(
-                    name = nameedt,
+                    name = nameEdt,
                     phoneNumber = ph,
-                    imageRes = imagepreview
+                    imageRes = imagePreview!!
                 )
+                listOfContact.add(contact)
+                adapter.notifyDataSetChanged()
+                dialog.dismiss()
             }
         }
     }
